@@ -1,0 +1,35 @@
+<RCC>
+  <qresource prefix="/images">
+    <file>calendar.png</file>
+    <file>Profile.png</file>
+    <file>UserWBG.png</file>
+    <file>fr.png</file>
+    <file>fre1.png</file>
+    <file>Sett.png</file>
+    <file>logo2.png</file>
+    <file>Logo1.png</file>
+    <file>1.png</file>
+    <file>4.png</file>
+  </qresource>
+  <qresource prefix="Icons">
+    <file>Bluecal.png</file>
+    <file>Deliv.png</file>
+    <file>Profilenowhite.png</file>
+    <file>delete.png</file>
+    <file>pencedit.png</file>
+    <file>eye.png</file>
+    <file>searchingraysmol.png</file>
+    <file>searchingray.png</file>
+    <file>Ordernowbg.png</file>
+    <file>Metrics.png</file>
+    <file>Reports.png</file>
+    <file>DashB.png</file>
+    <file>Home.png</file>
+    <file>Transa.png</file>
+    <file>User.png</file>
+  </qresource>
+  <qresource prefix="/font">
+    <file>Fredoka-Bold.ttf</file>
+    <file>Fredoka-SemiBold.ttf</file>
+  </qresource>
+</RCC>
