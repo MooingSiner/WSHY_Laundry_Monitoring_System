@@ -402,7 +402,7 @@ class SDeliveryControl:
 
             formatted_order_id = self.format_order_id(order_id)
 
-            # Get order details to show total amount
+            # Get order details
             order_details = self.model.get_order_by_id(order_id)
             if not order_details:
                 QMessageBox.warning(
@@ -445,6 +445,14 @@ class SDeliveryControl:
                 cursor.close()
 
                 print(f"✓ Order {formatted_order_id} marked as delivered at {delivery_time}")
+
+                # ✅ CRITICAL FIX: Check if popup exists and recreate if needed
+                if self.finalize_popup is None or not self.finalize_popup.isVisible():
+                    print("✓ Creating new FinalizeOrderPopup instance")
+                    self.finalize_popup = FinalizeOrderPopup(parent=self.staff_home, model=self.model)
+                    self.finalize_popup.set_staff_id(self.current_staff_id)
+                    self.finalize_popup.transaction_completed.connect(self.on_transaction_completed)
+                    print("✓ FinalizeOrderPopup recreated and connected")
 
                 # Show finalize payment popup
                 self.finalize_popup.setOrderData(order_id)
@@ -676,6 +684,11 @@ class SDeliveryControl:
             try:
                 self.finalize_popup.hide()
                 self.finalize_popup.close()
+                # ✅ Disconnect signal to prevent errors
+                try:
+                    self.finalize_popup.transaction_completed.disconnect(self.on_transaction_completed)
+                except:
+                    pass
                 self.finalize_popup.deleteLater()
                 self.finalize_popup = None
                 print("✓ Closed finalize popup before logout confirmation")
