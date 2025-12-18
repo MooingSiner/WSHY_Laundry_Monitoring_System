@@ -25,7 +25,7 @@ class AdminHome(QMainWindow):
         self.home_page_index = self.find_page_index("AH")
         self.dashboard_page_index = self.find_page_index("ADB")
         self.users_page_index = self.find_page_index("US")
-        self.manegerc_page_index = self.find_page_index("USE")
+        self.managerc_page_index = self.find_page_index("USE")
         self.CreateStaff_page_index = self.find_page_index("CreateStaff")
         self.order_page_index = self.find_page_index("ManageOrder")
         self.report_page_index = self.find_page_index("History")

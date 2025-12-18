@@ -4,10 +4,10 @@ from PyQt6.QtWidgets import QMessageBox
 class ADashBControl:
     """Controller for Dashboard page navigation and data management"""
 
-    def __init__(self, admin_home, dashboard, maneger, order, report, model,login_view):
+    def __init__(self, admin_home, dashboard, manager, order, report, model,login_view):
         self.admin_home = admin_home
         self.dashboard = dashboard
-        self.maneger = maneger
+        self.manager = manager
         self.order = order
         self.report = report
         self.model = model  # Add model reference
@@ -68,7 +68,7 @@ class ADashBControl:
 
     def go_to_users(self):
         print("Navigating to Users from Dashboard")
-        self.maneger.show()
+        self.manager.show()
 
     def go_to_orders(self):
         print("Navigating to Orders from Dashboard")

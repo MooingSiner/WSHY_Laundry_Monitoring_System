@@ -6,9 +6,9 @@ from PyQt6.QtCore import Qt
 class SCreateCustomerControl:
     """Controller for Staff Customer Creation page"""
 
-    def __init__(self, model, staff_home, dashboard,customer, order,delivery, report, login_view, manegerc_controller=None):
+    def __init__(self, model, staff_home, dashboard,customer, order,delivery, report, login_view, managerc_controller=None):
         """
-        manegerc_controller: optional reference to the SManegerCControl instance that manages the customer list.
+        managerc_controller: optional reference to the SManagerCControl instance that manages the customer list.
         """
         self.staff_home = staff_home
         self.dashboard = dashboard
@@ -22,8 +22,8 @@ class SCreateCustomerControl:
         # Staff ID from login session
         self.staff_id = None
 
-        # Controller that owns the customer list view (SManegerCControl)
-        self.manegerc_controller = manegerc_controller
+        # Controller that owns the customer list view (SManagerCControl)
+        self.managerc_controller = managerc_controller
 
         # Connect buttons and setup
         self.connect_customer_buttons()
@@ -164,8 +164,8 @@ class SCreateCustomerControl:
 
                 # Refresh customer list immediately if controller reference available
                 try:
-                    if getattr(self, "manegerc_controller", None):
-                        self.manegerc_controller.load_customer_data()
+                    if getattr(self, "managerc_controller", None):
+                        self.managerc_controller.load_customer_data()
                 except Exception:
                     import traceback
                     traceback.print_exc()
@@ -211,8 +211,8 @@ class SCreateCustomerControl:
         self.clear_form()
         # Navigate back to customer list and refresh
         try:
-            if getattr(self, "manegerc_controller", None):
-                self.manegerc_controller.load_customer_data()
+            if getattr(self, "managerc_controller", None):
+                self.managerc_controller.load_customer_data()
         except Exception:
             pass
         self.go_to_customers()
@@ -230,8 +230,8 @@ class SCreateCustomerControl:
         print("Staff: Navigating to Customers")
         # Defensive reload: attempt to refresh before showing
         try:
-            if getattr(self, "manegerc_controller", None):
-                self.manegerc_controller.load_customer_data()
+            if getattr(self, "managerc_controller", None):
+                self.managerc_controller.load_customer_data()
         except Exception:
             import traceback
             traceback.print_exc()

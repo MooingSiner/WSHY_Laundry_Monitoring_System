@@ -331,27 +331,41 @@ class SHControl:
                                 f"Could not load profile details: {str(e)}")
 
     def go_to_logout(self):
-        # Create confirmation dialog
+
+        # ✅ CRITICAL FIX: Close all popups FIRST, before showing confirmation
+        if self.staff_popup:
+            try:
+                self.staff_popup.hide()
+                self.staff_popup.close()
+                self.staff_popup.deleteLater()
+                self.staff_popup = None
+                print("✓ Closed staff popup before logout confirmation")
+            except Exception as e:
+                print(f"Warning: Error closing staff popup: {e}")
+
+        # NOW show confirmation dialog (no popups blocking it)
         reply = QMessageBox.question(
             self.staff_home,
             "Confirm Logout",
             "Are you sure you want to logout?",
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
-            QMessageBox.StandardButton.No  # Default button
+            QMessageBox.StandardButton.No
         )
 
-        # Check user's response
         if reply == QMessageBox.StandardButton.Yes:
             print("✓ Logging out...")
+
             # Clear current staff context
             self.current_staff_id = None
             self.model = None
 
             # Close staff home
             self.staff_home.close()
+
             # Clear login fields for security
             self.login_view.username.clear()
             self.login_view.password.clear()
+
             # Show login view
             self.login_view.show()
             self.login_view.username.setFocus()

@@ -456,6 +456,23 @@ class FinalizeOrderPopup(QtWidgets.QWidget):
             import traceback
             traceback.print_exc()
 
+    def closeEvent(self, event):
+        """Handle popup close event safely"""
+        try:
+            # Disconnect any signals
+            # Clean up references
+            self.model = None
+            event.accept()
+        except:
+            event.accept()
+
+    def __del__(self):
+        """Destructor - clean up when popup is destroyed"""
+        try:
+            self.model = None
+        except:
+            pass
+
 
 # Standalone test
 if __name__ == '__main__':

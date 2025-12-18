@@ -5,10 +5,10 @@ from PyQt6.QtWidgets import QMessageBox
 class Editstaffcontrol:
     """Controller for Edit Staff page"""
 
-    def __init__(self, model, admin_home, dashboard, maneger, order, report,login_view):
+    def __init__(self, model, admin_home, dashboard, manager, order, report,login_view):
         self.admin_home = admin_home
         self.dashboard = dashboard
-        self.maneger = maneger
+        self.manager = manager
         self.model = model
         self.order = order
         self.report = report
@@ -17,7 +17,7 @@ class Editstaffcontrol:
         self.current_employee_id = None
         self.current_staff_id = None
         self.current_role = None
-        self.maneger_control = None
+        self.manager_control = None
 
         # Track if we're in edit mode
         self.is_editing = False
@@ -285,9 +285,9 @@ class Editstaffcontrol:
         # Show the users page first
         self.admin_home.stackedWidget.setCurrentIndex(self.admin_home.users_page_index)
 
-        # Then refresh the table if maneger_control is available
-        if self.maneger_control:
-            self.maneger_control.load_staff_data()
+        # Then refresh the table if manager_control is available
+        if self.manager_control:
+            self.manager_control.load_staff_data()
 
 
     # Navigation methods

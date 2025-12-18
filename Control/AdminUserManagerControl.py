@@ -5,12 +5,12 @@ from PyQt6.QtWidgets import QMessageBox, QTableWidgetItem
 class AManagerControl:
     """Controller for User Manager page navigation"""
 
-    def __init__(self, admin_home, dashboard, maneger, manegerc, cstaff, order, report, model, editstaff,
+    def __init__(self, admin_home, dashboard, manager, managerc, cstaff, order, report, model, editstaff,
                  editstaff_control,login_view):
         self.admin_home = admin_home
         self.dashboard = dashboard
-        self.maneger = maneger
-        self.manegerc = manegerc
+        self.manager = manager
+        self.managerc = managerc
         self.cstaff = cstaff
         self.order = order
         self.report = report
@@ -24,17 +24,17 @@ class AManagerControl:
         self.selected_staff_id = None
 
         # CRITICAL: Set bidirectional reference
-        self.editstaff_control.maneger_control = self
+        self.editstaff_control.manager_control = self
 
-        self.connect_maneger_buttons()
+        self.connect_manager_buttons()
         self.configure_table_settings()
         QTimer.singleShot(100, self.load_staff_data)
 
-    def connect_maneger_buttons(self):
+    def connect_manager_buttons(self):
         """Connect navigation buttons on the User Manager page"""
 
         if hasattr(self.admin_home, "gotc"):
-            self.admin_home.gotc.clicked.connect(self.go_to_manegerc)
+            self.admin_home.gotc.clicked.connect(self.go_to_managerc)
 
         # Sidebar buttons
         if hasattr(self.admin_home, "Homebut_5"):
@@ -498,7 +498,7 @@ class AManagerControl:
 
     def go_to_users(self):
         print("Navigating to Users")
-        self.maneger.show()
+        self.manager.show()
         self.load_staff_data()
 
     def go_to_orders(self):
@@ -512,31 +512,44 @@ class AManagerControl:
     def go_to_logout(self):
         from PyQt6.QtWidgets import QMessageBox
 
-        # Create confirmation dialog
+        # ✅ CRITICAL FIX: Close all popups FIRST, before showing confirmation
+        if self.staff_popup:
+            try:
+                self.staff_popup.hide()
+                self.staff_popup.close()
+                self.staff_popup.deleteLater()
+                self.staff_popup = None
+                print("✓ Closed staff popup before logout confirmation")
+            except Exception as e:
+                print(f"Warning: Error closing staff popup: {e}")
+
+        # NOW show confirmation dialog (no popups blocking it)
         reply = QMessageBox.question(
             self.admin_home,
             "Confirm Logout",
             "Are you sure you want to logout?",
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
-            QMessageBox.StandardButton.No  # Default button
+            QMessageBox.StandardButton.No
         )
 
-        # Check user's response
         if reply == QMessageBox.StandardButton.Yes:
             print("Logging out...")
+
             # Close admin home
             self.admin_home.close()
+
             # Clear login fields for security
             self.login_view.username.clear()
             self.login_view.password.clear()
+
             # Show login view
             self.login_view.show()
             self.login_view.username.setFocus()
         else:
             print("Logout cancelled")
 
-    def go_to_manegerc(self):
-        self.manegerc.show()
+    def go_to_managerc(self):
+        self.managerc.show()
 
     def go_to_createstaff(self):
         self.cstaff.show()

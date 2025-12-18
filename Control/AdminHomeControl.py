@@ -5,10 +5,10 @@ from View.adminpopupdetails import AdminDetailsPopup
 class AHControl:
     """Controller for AdminHome page navigation"""
 
-    def __init__(self, admin_home, dashboard,maneger,order,report,cstaff,login_view):
+    def __init__(self, admin_home, dashboard,manager,order,report,cstaff,login_view):
         self.admin_home = admin_home
         self.dashboard = dashboard
-        self.maneger = maneger
+        self.manager = manager
         self.order = order
         self.report = report
         self.cstaff = cstaff
@@ -187,7 +187,7 @@ class AHControl:
 
     def go_to_users(self):
         print("✓ Navigating to Users")
-        self.maneger.show()
+        self.manager.show()
 
     def go_to_orders(self):
         print("✓ Navigating to Orders")
@@ -320,27 +320,41 @@ class AHControl:
         return formatted
 
     def go_to_logout(self):
-        # Create confirmation dialog
+
+        # ✅ CRITICAL FIX: Close all popups FIRST, before showing confirmation
+        if self.admin_popup:
+            try:
+                self.admin_popup.hide()
+                self.admin_popup.close()
+                self.admin_popup.deleteLater()
+                self.admin_popup = None
+                print("✓ Closed admin popup before logout confirmation")
+            except Exception as e:
+                print(f"Warning: Error closing admin popup: {e}")
+
+        # NOW show confirmation dialog (no popups blocking it)
         reply = QMessageBox.question(
             self.admin_home,
             "Confirm Logout",
             "Are you sure you want to logout?",
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
-            QMessageBox.StandardButton.No  # Default button
+            QMessageBox.StandardButton.No
         )
 
-        # Check user's response
         if reply == QMessageBox.StandardButton.Yes:
             print("✓ Logging out...")
+
             # Clear current admin context
             self.current_admin_id = None
             self.model = None
 
             # Close admin home
             self.admin_home.close()
+
             # Clear login fields for security
             self.login_view.username.clear()
             self.login_view.password.clear()
+
             # Show login view
             self.login_view.show()
             self.login_view.username.setFocus()

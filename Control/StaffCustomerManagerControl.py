@@ -28,14 +28,14 @@ class SManagerCControl:
         # 🔧 ADD THIS: Connect to page change signal for auto-refresh
         if hasattr(self.staff_home, 'stackedWidget'):
             self.staff_home.stackedWidget.currentChanged.connect(self.on_page_changed)
-            print("✅ SManegerCControl: Connected to stackedWidget page change signal")
+            print("✅ SManagerCControl: Connected to stackedWidget page change signal")
 
             # 🔧 NEW: Also connect to the customer widget itself if it's a QWidget
         if hasattr(self.customer, 'parent') and hasattr(self.customer.parent(), 'currentChanged'):
             self.customer.parent().currentChanged.connect(self.on_page_changed)
 
         # Connect buttons from Customer Manager page
-        self.connect_manegerc_buttons()
+        self.connect_managerc_buttons()
         self.customer_popup = None
         self.staff_id = None
 
@@ -63,7 +63,7 @@ class SManagerCControl:
         except Exception as e:
             print(f"⚠️ Error in on_page_changed: {e}")
 
-    def connect_manegerc_buttons(self):
+    def connect_managerc_buttons(self):
         """Connect navigation buttons on the Staff Customer Manager page (CSE)"""
 
         # Sidebar buttons - CSE page uses _5 suffix
@@ -172,7 +172,7 @@ class SManagerCControl:
     def set_staff_id(self, staff_id):
         """Set the logged-in staff ID"""
         self.staff_id = staff_id
-        print(f"✓ SManegerCControl: Staff ID set to {staff_id}")
+        print(f"✓ SManagerCControl: Staff ID set to {staff_id}")
 
     def search_customer(self):
         """Search customers and stretch first column during search"""
@@ -402,7 +402,7 @@ class SManagerCControl:
                 self.createorder_control.set_selected_customer(customer_id, customer_name)
                 print(f"✓ Staff: Customer set in CreateOrderControl")
             else:
-                print("✗ ERROR: createorder_control attribute not found in SManegerCControl!")
+                print("✗ ERROR: createorder_control attribute not found in SManagerCControl!")
                 QMessageBox.critical(
                     self.staff_home,
                     "Configuration Error",
@@ -465,25 +465,38 @@ class SManagerCControl:
         print("Staff: Navigating to Delivery")
         self.delivery.show()
 
-
     def go_to_logout(self):
-        # Create confirmation dialog
+
+        # ✅ CRITICAL FIX: Close all popups FIRST, before showing confirmation
+        if self.customer_popup:
+            try:
+                self.customer_popup.hide()
+                self.customer_popup.close()
+                self.customer_popup.deleteLater()
+                self.customer_popup = None
+                print("✓ Closed customer popup before logout confirmation")
+            except Exception as e:
+                print(f"Warning: Error closing customer popup: {e}")
+
+        # NOW show confirmation dialog (no popups blocking it)
         reply = QMessageBox.question(
             self.staff_home,
             "Confirm Logout",
             "Are you sure you want to logout?",
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
-            QMessageBox.StandardButton.No  # Default button
+            QMessageBox.StandardButton.No
         )
 
-        # Check user's response
         if reply == QMessageBox.StandardButton.Yes:
             print("Staff: Logging out...")
+
             # Close staff home
             self.staff_home.close()
+
             # Clear login fields for security
             self.login_view.username.clear()
             self.login_view.password.clear()
+
             # Show login view
             self.login_view.show()
             self.login_view.username.setFocus()

@@ -7,10 +7,10 @@ from View.CustomerDetailsPopup import CustomerDetailsPopup
 class AManagerControlC:
     """Controller for Customer Manager page"""
 
-    def __init__(self, admin_home, dashboard, maneger, managerc, order, report, cust, model, editcustomer, editcustomer_control,login_view):
+    def __init__(self, admin_home, dashboard, manager, managerc, order, report, cust, model, editcustomer, editcustomer_control,login_view):
         self.admin_home = admin_home
         self.dashboard = dashboard
-        self.maneger = maneger
+        self.manager = manager
         self.managerc = managerc
         self.order = order
         self.report = report
@@ -26,13 +26,13 @@ class AManagerControlC:
         self.editcustomer_control.managerc_control = self
 
         # Connect buttons from Customer Manager page
-        self.connect_manegerc_buttons()
+        self.connect_managerc_buttons()
         self.customer_popup = None
 
         # Load customer data when initialized
         self.load_customer_data()
 
-    def connect_manegerc_buttons(self):
+    def connect_managerc_buttons(self):
         """Connect navigation buttons on the Customer Manager page"""
         # Sidebar buttons (kept as is)
         if hasattr(self.admin_home, "Homebut_7"):
@@ -356,7 +356,7 @@ class AManagerControlC:
     def go_to_users(self):
         print("Navigating to Users")
         self.load_customer_data()  # Force refresh
-        self.maneger.show()
+        self.manager.show()
 
     def go_to_orders(self):
         print("Navigating to Orders")
@@ -369,23 +369,36 @@ class AManagerControlC:
     def go_to_logout(self):
         from PyQt6.QtWidgets import QMessageBox
 
-        # Create confirmation dialog
+        # ✅ CRITICAL FIX: Close all popups FIRST, before showing confirmation
+        if self.customer_popup:
+            try:
+                self.customer_popup.hide()
+                self.customer_popup.close()
+                self.customer_popup.deleteLater()
+                self.customer_popup = None
+                print("✓ Closed customer popup before logout confirmation")
+            except Exception as e:
+                print(f"Warning: Error closing customer popup: {e}")
+
+        # NOW show confirmation dialog (no popups blocking it)
         reply = QMessageBox.question(
             self.admin_home,
             "Confirm Logout",
             "Are you sure you want to logout?",
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
-            QMessageBox.StandardButton.No  # Default button
+            QMessageBox.StandardButton.No
         )
 
-        # Check user's response
         if reply == QMessageBox.StandardButton.Yes:
             print("Logging out...")
+
             # Close admin home
             self.admin_home.close()
+
             # Clear login fields for security
             self.login_view.username.clear()
             self.login_view.password.clear()
+
             # Show login view
             self.login_view.show()
             self.login_view.username.setFocus()

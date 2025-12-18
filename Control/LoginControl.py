@@ -56,8 +56,8 @@ class LoginController:
         # Initialize views
         # AdminView
         self.dashboard = ADashboard(admin_home, model)
-        self.maneger = AManager(admin_home)
-        self.manegerc = AManagerC(admin_home)
+        self.manager = AManager(admin_home)
+        self.managerc = AManagerC(admin_home)
         self.cstaff = CreateStaff(admin_home)
         self.order = AOrders(admin_home)
         self.report = AReport(admin_home)
@@ -79,16 +79,16 @@ class LoginController:
         self.finalize_popup = FinalizeOrderPopup(parent=staff_home, model=model)
 
         # Admin Controllers
-        self.home_controller = AHControl(admin_home, self.dashboard, self.maneger, self.order, self.report, self.cstaff,self.view)
-        self.dashboard_controller = ADashBControl(admin_home, self.dashboard, self.maneger, self.order, self.report,self.model, self.view)
-        self.editstaff_controller = Editstaffcontrol(self.model, self.admin_home, self.dashboard, self.maneger,self.order, self.report, self.view)
-        self.editcustomer_control = EditCustomerControl(self.model, self.admin_home, self.dashboard, self.maneger,self.manegerc, self.order, self.report, self.view)
-        self.maneger_controller = AManagerControl(admin_home, self.dashboard, self.maneger, self.manegerc, self.cstaff,self.order, self.report, self.model, self.editstaff,self.editstaff_controller, self.view)
-        self.manegerc_controller = AManagerControlC(admin_home, self.dashboard, self.maneger, self.manegerc, self.order,self.report, self.ccv, self.model, self.editcustomer,self.editcustomer_control, self.view)
-        self.order_controller = AOrderControl(admin_home, self.dashboard, self.maneger, self.order, self.report,self.model, self.view)
-        self.report_controller = AReportControl(admin_home, self.dashboard, self.maneger, self.order, self.report,self.model, self.view)
-        self.customer_controller = CreateCustomerControl(self.model, admin_home, self.dashboard, self.maneger,self.order, self.report, self.view, self.manegerc_controller)
-        self.staff_controller = Createstaffcontrol(self.model, admin_home, self.dashboard, self.maneger, self.order,self.report, self.view, self.maneger_controller)
+        self.home_controller = AHControl(admin_home, self.dashboard, self.manager, self.order, self.report, self.cstaff,self.view)
+        self.dashboard_controller = ADashBControl(admin_home, self.dashboard, self.manager, self.order, self.report,self.model, self.view)
+        self.editstaff_controller = Editstaffcontrol(self.model, self.admin_home, self.dashboard, self.manager,self.order, self.report, self.view)
+        self.editcustomer_control = EditCustomerControl(self.model, self.admin_home, self.dashboard, self.manager,self.managerc, self.order, self.report, self.view)
+        self.manager_controller = AManagerControl(admin_home, self.dashboard, self.manager, self.managerc, self.cstaff,self.order, self.report, self.model, self.editstaff,self.editstaff_controller, self.view)
+        self.managerc_controller = AManagerControlC(admin_home, self.dashboard, self.manager, self.managerc, self.order,self.report, self.ccv, self.model, self.editcustomer,self.editcustomer_control, self.view)
+        self.order_controller = AOrderControl(admin_home, self.dashboard, self.manager, self.order, self.report,self.model, self.view)
+        self.report_controller = AReportControl(admin_home, self.dashboard, self.manager, self.order, self.report,self.model, self.view)
+        self.customer_controller = CreateCustomerControl(self.model, admin_home, self.dashboard, self.manager,self.order, self.report, self.view, self.managerc_controller)
+        self.staff_controller = Createstaffcontrol(self.model, admin_home, self.dashboard, self.manager, self.order,self.report, self.view, self.manager_controller)
 
         # Staff Controllers - Initialize in correct order
         self.staff_home_controller = SHControl(staff_home, self.staff_db, self.customer, self.stafforder, self.delivery,self.staffreport, self.view)
@@ -232,10 +232,10 @@ class LoginController:
                 self.finalize_popup.set_staff_id(self.current_staff_id)
                 print(f"✓ Set staff ID in FinalizeOrderPopup: {self.current_staff_id}")
 
-                # 7. Customer Manager Controller (SManegerCControl)
+                # 7. Customer Manager Controller (SManagerCControl)
                 if hasattr(self.staff_smanagerc_controller, 'set_staff_id'):
                     self.staff_smanagerc_controller.set_staff_id(self.current_staff_id)
-                    print(f"✓ Set staff ID in SManegerCControl: {self.current_staff_id}")
+                    print(f"✓ Set staff ID in SManagerCControl: {self.current_staff_id}")
 
                 # 8. Order Controller (SOControl)
                 if hasattr(self.staff_order_controller, 'set_staff_id'):

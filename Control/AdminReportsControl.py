@@ -22,12 +22,15 @@ class AReportControl:
         self.login_view = login_view
 
         self.sort_ascending_history = True
-        self.current_filter = "Completed"  # Start with Completed only
+        self.current_filter = "Completed"
         self.refresh_timer = None
         self.is_destroyed = False
         self.last_order_count = 0
         self.last_customer_count = 0
-        self.connections_made = False  # Track if connections are established
+        self.connections_made = False
+
+        # ✅ ADD THIS LINE - Store popup as instance variable
+        self.order_popup = None  # <-- THIS WAS MISSING!
 
         # Connect to page change signal for auto-refresh
         if hasattr(self.admin_home, 'stackedWidget'):
@@ -489,6 +492,44 @@ class AReportControl:
         # Disconnect all button connections
         self.disconnect_all()
 
+    # ============================================================================
+    # FIXED AdminReportsControl.py - TWO CRITICAL CHANGES
+    # ============================================================================
+
+    # CHANGE 1: Add popup instance variable in __init__
+    # ----------------------------------------------------------------------------
+    def __init__(self, admin_home, dashboard, user, order, report, model, login_view):
+        self.admin_home = admin_home
+        self.dashboard = dashboard
+        self.manager = user
+        self.order = order
+        self.report = report
+        self.model = model
+        self.login_view = login_view
+
+        self.sort_ascending_history = True
+        self.current_filter = "Completed"
+        self.refresh_timer = None
+        self.is_destroyed = False
+        self.last_order_count = 0
+        self.last_customer_count = 0
+        self.connections_made = False
+
+        # ✅ ADD THIS LINE - Store popup as instance variable
+        self.order_popup = None  # <-- THIS WAS MISSING!
+
+        # Connect to page change signal for auto-refresh
+        if hasattr(self.admin_home, 'stackedWidget'):
+            self.admin_home.stackedWidget.currentChanged.connect(self.on_page_changed)
+
+        # Initial connection setup
+        self.connect_report_buttons()
+
+        # Load completed orders initially
+        QTimer.singleShot(100, self.safe_load_history_data)
+
+    # CHANGE 2: Store popup in view_order_details() and use it in go_to_logout()
+    # ----------------------------------------------------------------------------
     def view_order_details(self):
         """View order details using OrderDetailsPopup"""
         if self.is_destroyed:
@@ -515,20 +556,24 @@ class AReportControl:
         try:
             from View.OrderPopup import OrderDetailsPopup
 
-            popup = OrderDetailsPopup(self.admin_home, self.model)
+            # ✅ FIXED: Store popup as instance variable (not local variable)
+            if self.order_popup is None:
+                self.order_popup = OrderDetailsPopup(self.admin_home, self.model)
 
-            success = popup.loadOrderFromDatabase(order_id)
+            success = self.order_popup.loadOrderFromDatabase(order_id)
 
             if success:
                 main_geo = self.admin_home.geometry()
-                popup_width = popup.width()
-                popup_height = popup.height()
+                popup_width = self.order_popup.width()
+                popup_height = self.order_popup.height()
 
                 center_x = main_geo.x() + (main_geo.width() - popup_width) // 2
                 center_y = main_geo.y() + (main_geo.height() - popup_height) // 2
 
-                popup.move(center_x, center_y)
-                popup.show()
+                self.order_popup.move(center_x, center_y)
+                self.order_popup.show()
+                self.order_popup.raise_()
+                self.order_popup.activateWindow()
                 print(f"✓ Reports: Showing order details for OrderID: {order_id}")
             else:
                 QMessageBox.warning(self.admin_home, "Error", "Could not load order details.")
@@ -776,6 +821,19 @@ class AReportControl:
         if self.is_destroyed:
             return
 
+        # ✅ CRITICAL FIX: Close popup BEFORE showing confirmation
+        # Changed from self.popup to self.order_popup
+        if self.order_popup:  # <-- FIXED: Was checking self.popup (doesn't exist!)
+            try:
+                self.order_popup.hide()
+                self.order_popup.close()
+                self.order_popup.deleteLater()
+                self.order_popup = None
+                print("✓ Reports: Closed order popup before logout confirmation")
+            except Exception as e:
+                print(f"Warning: Error closing order popup: {e}")
+
+        # NOW show confirmation dialog (no popups blocking it)
         reply = QMessageBox.question(
             self.admin_home,
             "Confirm Logout",
@@ -786,7 +844,13 @@ class AReportControl:
 
         if reply == QMessageBox.StandardButton.Yes:
             print("Reports: Logging out...")
-            self.cleanup()
+
+            # Call cleanup() first
+            try:
+                self.cleanup()
+            except Exception as e:
+                print(f"Warning: Error during cleanup: {e}")
+
             self.admin_home.close()
             self.login_view.username.clear()
             self.login_view.password.clear()

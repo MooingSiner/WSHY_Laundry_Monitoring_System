@@ -25,7 +25,7 @@ class MainWindow(QWidget):
         self.admin_home = AdminHome()
         self.staff_home = StaffHome()
 
-        # Initialize controller (this creates dashboard, maneger, and all sub-controllers)
+        # Initialize controller (this creates dashboard, manager, and all sub-controllers)
         self.controller = LoginController(self.login_view, self.model, self.admin_home,self.staff_home)
 
         # Setup and show login view

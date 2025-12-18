@@ -9,16 +9,16 @@ from PyQt6.QtWidgets import QMessageBox
 class Createstaffcontrol:
     """Controller for Dashboard page navigation"""
 
-    def __init__(self, model, admin_home, dashboard, maneger, order, report,login_view, maneger_controller=None):
+    def __init__(self, model, admin_home, dashboard, manager, order, report,login_view, manager_controller=None):
         self.admin_home = admin_home
         self.dashboard = dashboard
-        self.maneger = maneger
+        self.manager = manager
         self.model = model
         self.order = order
         self.report = report
         self.login_view = login_view
         # new: reference to manager controller so we can call load_staff_data()
-        self.maneger_controller = maneger_controller
+        self.manager_controller = manager_controller
 
         # Connect buttons from Dashboard page (ADB)
         self.connect_createstaff_buttons()
@@ -83,14 +83,14 @@ class Createstaffcontrol:
         print("Navigating to Users")
         # If we have the manager controller, ensure it reloads data before showing the view
         try:
-            if getattr(self, "maneger_controller", None):
-                self.maneger_controller.load_staff_data()
+            if getattr(self, "manager_controller", None):
+                self.manager_controller.load_staff_data()
             else:
                 # fallback: if manager view exists, attempt to call its controller via a known attribute
-                if hasattr(self.maneger, "load_staff_data"):
+                if hasattr(self.manager, "load_staff_data"):
                     try:
                         # some codebases attach load to view; call defensively
-                        self.maneger.load_staff_data()
+                        self.manager.load_staff_data()
                     except Exception:
                         pass
         except Exception:
@@ -98,8 +98,8 @@ class Createstaffcontrol:
             traceback.print_exc()
 
         # show the manager view
-        if getattr(self, "maneger", None):
-            self.maneger.show()
+        if getattr(self, "manager", None):
+            self.manager.show()
 
     def go_to_orders(self):
         print("Navigating to Orders")
@@ -162,10 +162,10 @@ class Createstaffcontrol:
 
         if result:
             self.clear_form()
-            if getattr(self, "maneger_controller", None):
-                self.maneger_controller.load_staff_data()
-            if getattr(self, "maneger", None):
-                self.maneger.show()
+            if getattr(self, "manager_controller", None):
+                self.manager_controller.load_staff_data()
+            if getattr(self, "manager", None):
+                self.manager.show()
 
     def clear_form(self):
         """Clear all form fields after successful creation"""

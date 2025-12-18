@@ -6,10 +6,10 @@ from PyQt6.QtCore import Qt
 class CreateCustomerControl:
     """Controller for Customer Management page"""
 
-    def __init__(self, model, admin_home, dashboard, maneger, order, report, login_view, manegerc_controller=None):
+    def __init__(self, model, admin_home, dashboard, manager, order, report, login_view, managerc_controller=None):
         self.admin_home = admin_home
         self.dashboard = dashboard
-        self.maneger = maneger
+        self.manager = manager
         self.model = model
         self.order = order
         self.report = report
@@ -18,8 +18,8 @@ class CreateCustomerControl:
         # ADD THIS: Admin ID tracking
         self.admin_id = None  # 🔧 NEW
 
-        # Controller that owns the customer list view (AManegerControlC)
-        self.manegerc_controller = manegerc_controller
+        # Controller that owns the customer list view (AManagerControlC)
+        self.managerc_controller = managerc_controller
 
         # Connect buttons and setup table
         self.connect_customer_buttons()
@@ -144,13 +144,13 @@ class CreateCustomerControl:
 
                 # --- NEW: refresh customer list immediately if controller reference available ---
                 try:
-                    if getattr(self, "manegerc_controller", None):
-                        self.manegerc_controller.load_customer_data()
+                    if getattr(self, "managarc_controller", None):
+                        self.managerc_controller.load_customer_data()
                     else:
                         # fallback: try to find a controller attached to the manager view
-                        if hasattr(self.maneger, "controller"):
+                        if hasattr(self.manager, "controller"):
                             try:
-                                self.maneger.controller.load_customer_data()
+                                self.manager.controller.load_customer_data()
                             except Exception:
                                 pass
                 except Exception:
@@ -160,15 +160,15 @@ class CreateCustomerControl:
                 # Navigate back to Customer Manager page and ensure it's visible
                 try:
                     # If you have a stacked widget index for customer manager, set it:
-                    if hasattr(self.admin_home, "manegerc_page_index"):
-                        self.admin_home.stackedWidget.setCurrentIndex(self.admin_home.manegerc_page_index)
+                    if hasattr(self.admin_home, "managerc_page_index"):
+                        self.admin_home.stackedWidget.setCurrentIndex(self.admin_home.managerc_page_index)
                 except Exception:
                     pass
 
                 # show the manager view to ensure the user sees the updated list
                 try:
-                    if getattr(self, "maneger", None):
-                        self.maneger.show()
+                    if getattr(self, "manager", None):
+                        self.manager.show()
                 except Exception:
                     pass
 
@@ -210,8 +210,8 @@ class CreateCustomerControl:
         self.clear_form()
         # Navigate back to customer list or previous page and refresh
         try:
-            if getattr(self, "manegerc_controller", None):
-                self.manegerc_controller.load_customer_data()
+            if getattr(self, "managerc_controller", None):
+                self.managerc_controller.load_customer_data()
         except Exception:
             pass
         self.go_to_users()
@@ -229,11 +229,11 @@ class CreateCustomerControl:
         print("Navigating to Users")
         # Defensive reload: attempt to refresh before showing
         try:
-            if getattr(self, "manegerc_controller", None):
-                self.manegerc_controller.load_customer_data()
-            elif hasattr(self.maneger, "controller"):
+            if getattr(self, "managerc_controller", None):
+                self.managerc_controller.load_customer_data()
+            elif hasattr(self.manager, "controller"):
                 try:
-                    self.maneger.controller.load_customer_data()
+                    self.manager.controller.load_customer_data()
                 except Exception:
                     pass
         except Exception:
@@ -241,8 +241,8 @@ class CreateCustomerControl:
             traceback.print_exc()
 
         # show the manager (customer list) view
-        if getattr(self, "maneger", None):
-            self.maneger.show()
+        if getattr(self, "manager", None):
+            self.manager.show()
 
     def go_to_orders(self):
         print("Navigating to Orders")

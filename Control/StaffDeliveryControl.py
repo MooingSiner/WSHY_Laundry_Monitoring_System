@@ -660,6 +660,29 @@ class SDeliveryControl:
 
     def go_to_logout(self):
         """Logout with confirmation"""
+
+        # ✅ CRITICAL FIX: Close all popups FIRST, before showing confirmation
+        if self.order_popup:
+            try:
+                self.order_popup.hide()
+                self.order_popup.close()
+                self.order_popup.deleteLater()
+                self.order_popup = None
+                print("✓ Closed order popup before logout confirmation")
+            except Exception as e:
+                print(f"Warning: Error closing order popup: {e}")
+
+        if self.finalize_popup:
+            try:
+                self.finalize_popup.hide()
+                self.finalize_popup.close()
+                self.finalize_popup.deleteLater()
+                self.finalize_popup = None
+                print("✓ Closed finalize popup before logout confirmation")
+            except Exception as e:
+                print(f"Warning: Error closing finalize popup: {e}")
+
+        # NOW show confirmation dialog (no popups blocking it)
         reply = QMessageBox.question(
             self.staff_home,
             "Confirm Logout",
@@ -670,11 +693,14 @@ class SDeliveryControl:
 
         if reply == QMessageBox.StandardButton.Yes:
             print("Staff: Logging out from Delivery...")
+
             self.staff_home.close()
+
             if hasattr(self.login_view, 'username'):
                 self.login_view.username.clear()
             if hasattr(self.login_view, 'password'):
                 self.login_view.password.clear()
+
             self.login_view.show()
             if hasattr(self.login_view, 'username'):
                 self.login_view.username.setFocus()

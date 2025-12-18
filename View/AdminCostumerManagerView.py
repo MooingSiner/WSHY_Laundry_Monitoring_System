@@ -9,13 +9,13 @@ class AManagerC:
         self.main_window = main_window
 
         # Get reference to the customer page (USE) in the stacked widget
-        self.manegerc_widget = self.main_window.stackedWidget.widget(
-            self.main_window.manegerc_page_index
+        self.managerc_widget = self.main_window.stackedWidget.widget(
+            self.main_window.managerc_page_index
         )
 
-        self.setup_manegerc_ui()
+        self.setup_managerc_ui()
 
-    def setup_manegerc_ui(self):
+    def setup_managerc_ui(self):
         """Setup customer manager-specific UI elements"""
 
         # Add title with Fredoka font
@@ -84,5 +84,5 @@ class AManagerC:
     def show(self):
         """Show the customer manager page"""
         self.main_window.stackedWidget.setCurrentIndex(
-            self.main_window.manegerc_page_index
+            self.main_window.managerc_page_index
         )

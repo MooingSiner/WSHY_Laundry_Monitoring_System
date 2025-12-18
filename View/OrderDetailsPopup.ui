@@ -299,7 +299,7 @@ QPushButton:pressed {
     <widget class="QLabel" name="label_orderby">
      <property name="geometry">
       <rect>
-       <x>240</x>
+       <x>230</x>
        <y>20</y>
        <width>81</width>
        <height>16</height>
@@ -312,7 +312,7 @@ QPushButton:pressed {
     <widget class="QLabel" name="label_process">
      <property name="geometry">
       <rect>
-       <x>240</x>
+       <x>230</x>
        <y>40</y>
        <width>81</width>
        <height>16</height>
@@ -456,7 +456,7 @@ QTableWidget {
     <widget class="QLabel" name="label_personal_info_3">
      <property name="geometry">
       <rect>
-       <x>240</x>
+       <x>230</x>
        <y>0</y>
        <width>150</width>
        <height>16</height>
@@ -477,6 +477,11 @@ QTableWidget {
        <width>221</width>
        <height>16</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>7</pointsize>
+      </font>
      </property>
      <property name="text">
       <string/>
@@ -501,9 +506,9 @@ QTableWidget {
     <widget class="QLabel" name="value_procesd">
      <property name="geometry">
       <rect>
-       <x>320</x>
+       <x>310</x>
        <y>40</y>
-       <width>141</width>
+       <width>151</width>
        <height>16</height>
       </rect>
      </property>
@@ -581,7 +586,7 @@ QTableWidget {
     <widget class="QLabel" name="value_date_deliver">
      <property name="geometry">
       <rect>
-       <x>240</x>
+       <x>230</x>
        <y>140</y>
        <width>201</width>
        <height>16</height>
@@ -597,7 +602,7 @@ QTableWidget {
     <widget class="QLabel" name="label_date_picked">
      <property name="geometry">
       <rect>
-       <x>240</x>
+       <x>230</x>
        <y>80</y>
        <width>101</width>
        <height>16</height>
@@ -610,7 +615,7 @@ QTableWidget {
     <widget class="QLabel" name="value_datepicked">
      <property name="geometry">
       <rect>
-       <x>240</x>
+       <x>230</x>
        <y>100</y>
        <width>201</width>
        <height>16</height>
@@ -626,7 +631,7 @@ QTableWidget {
     <widget class="QLabel" name="label_date_deliv">
      <property name="geometry">
       <rect>
-       <x>240</x>
+       <x>230</x>
        <y>120</y>
        <width>91</width>
        <height>16</height>
@@ -639,7 +644,7 @@ QTableWidget {
     <widget class="QLabel" name="label_address_2">
      <property name="geometry">
       <rect>
-       <x>240</x>
+       <x>230</x>
        <y>60</y>
        <width>150</width>
        <height>16</height>

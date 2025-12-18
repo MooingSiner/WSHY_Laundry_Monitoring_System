@@ -100,7 +100,7 @@ class OrderDetailsPopup(QtWidgets.QWidget):
         self.value_order_created = self.findChild(QtWidgets.QLabel, "value_order_created")
 
         # Apply Arial font to all value labels
-        arial_font = QFont("Arial", 10)
+        arial_font = QFont("Arial", 9)
         value_labels = [
             self.value_status, self.value_payment, self.value_orderby,
             self.value_procesd, self.value_address, self.value_wash,
@@ -452,6 +452,8 @@ class OrderDetailsPopup(QtWidgets.QWidget):
                     "Failed to generate PDF report."
                 )
 
+
+
         except Exception as e:
             QtWidgets.QApplication.restoreOverrideCursor()
             QtWidgets.QMessageBox.critical(
@@ -462,3 +464,20 @@ class OrderDetailsPopup(QtWidgets.QWidget):
             print(f"❌ PDF Error: {e}")
             import traceback
             traceback.print_exc()
+
+    def closeEvent(self, event):
+        """Handle popup close event safely"""
+        try:
+            # Disconnect any signals
+            # Clean up references
+            self.model = None
+            event.accept()
+        except:
+            event.accept()
+
+    def __del__(self):
+        """Destructor - clean up when popup is destroyed"""
+        try:
+            self.model = None
+        except:
+            pass

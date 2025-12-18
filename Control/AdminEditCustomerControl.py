@@ -4,10 +4,10 @@ from PyQt6.QtWidgets import QMessageBox
 class EditCustomerControl:
     """Controller for Edit Customer page"""
 
-    def __init__(self, model, admin_home, dashboard, maneger, managerc, order, report,login_view):
+    def __init__(self, model, admin_home, dashboard, manager, managerc, order, report,login_view):
         self.admin_home = admin_home
         self.dashboard = dashboard
-        self.maneger = maneger
+        self.manager = manager
         self.managerc = managerc
         self.model = model
         self.order = order

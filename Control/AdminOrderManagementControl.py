@@ -9,10 +9,10 @@ from View.OrderPopup import OrderDetailsPopup
 class AOrderControl:
     """Controller for Admin Order Management page"""
 
-    def __init__(self, admin_home, dashboard, maneger, order, report, model, login_view):
+    def __init__(self, admin_home, dashboard, manager, order, report, model, login_view):
         self.admin_home = admin_home
         self.dashboard = dashboard
-        self.maneger = maneger
+        self.manager = manager
         self.order = order
         self.report = report
         self.model = model
@@ -400,7 +400,7 @@ class AOrderControl:
 
     def go_to_users(self):
         print("Admin: Navigating to Users")
-        self.maneger.show()
+        self.ashow()
 
     def go_to_orders(self):
         print("Admin: Navigating to Orders")
@@ -414,6 +414,19 @@ class AOrderControl:
 
     def go_to_logout(self):
         """Handle logout with confirmation"""
+
+        # ✅ CRITICAL FIX: Close all popups FIRST, before showing confirmation
+        if self.order_popup:
+            try:
+                self.order_popup.hide()
+                self.order_popup.close()
+                self.order_popup.deleteLater()
+                self.order_popup = None
+                print("✓ Closed order popup before logout confirmation")
+            except Exception as e:
+                print(f"Warning: Error closing order popup: {e}")
+
+        # NOW show confirmation dialog (no popups blocking it)
         reply = QMessageBox.question(
             self.admin_home,
             "Confirm Logout",
@@ -424,12 +437,15 @@ class AOrderControl:
 
         if reply == QMessageBox.StandardButton.Yes:
             print("Admin: Logging out...")
+
             self.admin_home.close()
+
             # Clear login fields for security
             if hasattr(self.login_view, 'username'):
                 self.login_view.username.clear()
             if hasattr(self.login_view, 'password'):
                 self.login_view.password.clear()
+
             # Show login view
             self.login_view.show()
             if hasattr(self.login_view, 'username'):
