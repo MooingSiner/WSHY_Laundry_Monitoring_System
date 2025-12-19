@@ -291,7 +291,7 @@ class AManagerControl:
             return
 
         selected_row = selected_items[0].row()
-        staff_id_item = self.admin_home.tw.item(selected_row, 4)  # Column 4 has StaffID
+        staff_id_item = self.admin_home.tw.item(selected_row, 4)
 
         if not staff_id_item:
             QMessageBox.warning(
@@ -303,11 +303,9 @@ class AManagerControl:
 
         staff_id = staff_id_item.data(Qt.ItemDataRole.UserRole)
 
-        # Create popup with model if it doesn't exist
-        if self.staff_popup is None:
-            # Import the new StaffDetailsPopup instead of DraggablePopup
-            from View.StaffDetailsPopup import StaffDetailsPopup
-            self.staff_popup = StaffDetailsPopup(parent=self.admin_home, model=self.model)
+        # ✅ ALWAYS create fresh popup - REMOVE the "if None" check
+        from View.StaffDetailsPopup import StaffDetailsPopup
+        self.staff_popup = StaffDetailsPopup(parent=self.admin_home, model=self.model)
 
         # Load data directly from database using the staff ID
         success = self.staff_popup.loadStaffFromDatabase(staff_id)

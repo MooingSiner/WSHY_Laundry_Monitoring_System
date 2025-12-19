@@ -556,9 +556,8 @@ class AReportControl:
         try:
             from View.OrderPopup import OrderDetailsPopup
 
-            # ✅ FIXED: Store popup as instance variable (not local variable)
-            if self.order_popup is None:
-                self.order_popup = OrderDetailsPopup(self.admin_home, self.model)
+            # ✅ ALWAYS create fresh popup - REMOVE the "if None" check
+            self.order_popup = OrderDetailsPopup(self.admin_home, self.model)
 
             success = self.order_popup.loadOrderFromDatabase(order_id)
 
@@ -574,15 +573,15 @@ class AReportControl:
                 self.order_popup.show()
                 self.order_popup.raise_()
                 self.order_popup.activateWindow()
-                print(f"✓ Reports: Showing order details for OrderID: {order_id}")
+                print(f"✅ Reports: Showing order details for OrderID: {order_id}")
             else:
                 QMessageBox.warning(self.admin_home, "Error", "Could not load order details.")
 
         except ImportError as e:
-            print(f"✗ Reports: Error importing OrderDetailsPopup: {e}")
+            print(f"❌ Reports: Error importing OrderDetailsPopup: {e}")
             QMessageBox.warning(self.admin_home, "Error", f"Order details popup not available: {e}")
         except Exception as e:
-            print(f"✗ Reports: Error showing order details: {e}")
+            print(f"❌ Reports: Error showing order details: {e}")
             import traceback
             traceback.print_exc()
             QMessageBox.warning(self.admin_home, "Error", f"Error showing order details: {e}")

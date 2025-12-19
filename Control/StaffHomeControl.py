@@ -305,9 +305,8 @@ class SHControl:
                                         "Profile information not available.")
                 return
 
-            # Create popup if it doesn't exist
-            if not self.staff_popup:
-                self.staff_popup = StaffDetailsPopup(parent=self.staff_home, model=self.model)
+            # ✅ ALWAYS create a fresh popup instance
+            self.staff_popup = StaffDetailsPopup(parent=self.staff_home, model=self.model)
 
             # Load staff data and show popup
             if self.staff_popup.loadStaffFromDatabase(self.current_staff_id):
@@ -318,13 +317,13 @@ class SHControl:
                 y = parent_geo.y() + (parent_geo.height() - popup_geo.height()) // 2
                 self.staff_popup.move(x, y)
                 self.staff_popup.show()
-                print(f"✓ Showing staff profile popup for StaffID: {self.current_staff_id}")
+                print(f"✅ Showing staff profile popup for StaffID: {self.current_staff_id}")
             else:
                 QMessageBox.information(self.staff_home, "Profile Details",
                                         "Could not load profile information.")
 
         except Exception as e:
-            print(f"✗ Error showing profile details: {e}")
+            print(f"❌ Error showing profile details: {e}")
             import traceback
             traceback.print_exc()
             QMessageBox.warning(self.staff_home, "Error",

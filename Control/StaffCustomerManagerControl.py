@@ -241,16 +241,15 @@ class SManagerCControl:
             return
 
         selected_row = selected_items[0].row()
-        customer_id_item = self.staff_home.tableWidget_2.item(selected_row, 3)  # Column 3 has CustomerID
+        customer_id_item = self.staff_home.tableWidget_2.item(selected_row, 3)
 
         if not customer_id_item:
             return
 
         customer_id = customer_id_item.data(Qt.ItemDataRole.UserRole)
 
-        # Create popup with model if it doesn't exist
-        if self.customer_popup is None:
-            self.customer_popup = CustomerDetailsPopup(parent=self.staff_home, model=self.model)
+        # ✅ ALWAYS create a fresh popup instance
+        self.customer_popup = CustomerDetailsPopup(parent=self.staff_home, model=self.model)
 
         # Load data directly from database using the customer ID
         success = self.customer_popup.loadCustomerFromDatabase(customer_id)

@@ -327,8 +327,6 @@ class SOControl:
 
         try:
             selected_row = selected_items[0].row()
-
-            # Get OrderID from hidden column 4
             order_id_item = self.staff_home.tableWidget_3.item(selected_row, 4)
 
             if not order_id_item:
@@ -339,14 +337,12 @@ class SOControl:
                 )
                 return
 
-            # Get the actual order ID from UserRole data
             order_id = order_id_item.data(Qt.ItemDataRole.UserRole)
 
-            print(f"✓ SOControl: Loading order details for Order {self.format_order_id(order_id)}")
+            print(f"✅ Loading order details for Order {self.format_order_id(order_id)}")
 
-            # Create popup with model if it doesn't exist
-            if self.order_popup is None:
-                self.order_popup = OrderDetailsPopup(parent=self.staff_home, model=self.model)
+            # ✅ ALWAYS create a fresh popup instance
+            self.order_popup = OrderDetailsPopup(parent=self.staff_home, model=self.model)
 
             # Load data directly from database using the order ID
             success = self.order_popup.loadOrderFromDatabase(order_id)

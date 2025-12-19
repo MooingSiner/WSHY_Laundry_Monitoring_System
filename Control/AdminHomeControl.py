@@ -215,18 +215,17 @@ class AHControl:
                                 "This feature would show all system contents.\nImplementation depends on your requirements.")
 
     def view_profile_details(self):
-        """Show current admin profile details in popup"""
+        """Show current staff profile details in popup"""
         try:
             if not self.current_admin_id or not self.model:
                 QMessageBox.information(self.admin_home, "Profile Details",
                                         "Profile information not available.")
                 return
 
-            # Create popup if it doesn't exist - USE AdminDetailsPopup
-            if not self.admin_popup:
-                self.admin_popup = AdminDetailsPopup(parent=self.admin_home, model=self.model)
+            # ✅ ALWAYS create a fresh popup instance
+            self.admin_popup = AdminDetailsPopup(parent=self.admin_home, model=self.model)
 
-            # Load admin data directly using the ID
+            # Load staff data and show popup
             if self.admin_popup.loadAdminFromDatabase(self.current_admin_id):
                 # Center popup on parent window
                 parent_geo = self.admin_home.geometry()
@@ -235,13 +234,13 @@ class AHControl:
                 y = parent_geo.y() + (parent_geo.height() - popup_geo.height()) // 2
                 self.admin_popup.move(x, y)
                 self.admin_popup.show()
-                print(f"✓ Showing admin profile popup for AdminID: {self.current_admin_id}")
+                print(f"✅ Showing staff profile popup for StaffID: {self.current_admin_id}")
             else:
                 QMessageBox.information(self.admin_home, "Profile Details",
                                         "Could not load profile information.")
 
         except Exception as e:
-            print(f"✗ Error showing profile details: {e}")
+            print(f"❌ Error showing profile details: {e}")
             import traceback
             traceback.print_exc()
             QMessageBox.warning(self.admin_home, "Error",

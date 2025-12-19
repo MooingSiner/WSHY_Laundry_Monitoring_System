@@ -284,14 +284,12 @@ class AOrderControl:
 
             order_id = order_id_item.data(Qt.ItemDataRole.UserRole)
 
-            print(f"✓ AOrderControl: Loading order details for Order {self.format_order_id(order_id)}")
+            print(f"✅ Loading order details for Order {self.format_order_id(order_id)}")
 
-            # Create popup with model if it doesn't exist - EXACT SAME AS STAFF
-            if self.order_popup is None:
-                self.order_popup = OrderDetailsPopup(parent=self.admin_home, model=self.model)
-                print("✓ Created NEW popup instance for Admin")
+            # ✅ ALWAYS create a fresh popup instance
+            self.order_popup = OrderDetailsPopup(parent=self.admin_home, model=self.model)
 
-            # Load data
+            # Load data directly from database using the order ID
             success = self.order_popup.loadOrderFromDatabase(order_id)
 
             if not success:
@@ -302,13 +300,10 @@ class AOrderControl:
                 )
                 return
 
-            # Center and show
             self.center_popup(self.order_popup)
             self.order_popup.show()
             self.order_popup.raise_()
             self.order_popup.activateWindow()
-
-            print(f"✓ Popup shown, dragging should work now")
 
         except Exception as e:
             import traceback
@@ -316,7 +311,7 @@ class AOrderControl:
             QMessageBox.critical(
                 self.admin_home,
                 "Error",
-                f"An error occurred:\n{str(e)}"
+                f"An error occurred while loading order details:\n{str(e)}"
             )
 
     def center_popup(self, popup):

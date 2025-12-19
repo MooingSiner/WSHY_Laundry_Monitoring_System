@@ -383,7 +383,6 @@ class SDeliveryControl:
             )
             return
 
-        # Check if staff is logged in
         if not self.current_staff_id:
             QMessageBox.warning(
                 self.staff_home,
@@ -414,7 +413,7 @@ class SDeliveryControl:
 
             delivery_time = datetime.now()
 
-            # Update order: set DateDelivered (status will be updated to Completed by finalize popup)
+            # Update order: set DateDelivered
             try:
                 cursor = self.model.conn.cursor()
 
@@ -444,15 +443,13 @@ class SDeliveryControl:
                 self.model.conn.commit()
                 cursor.close()
 
-                print(f"✓ Order {formatted_order_id} marked as delivered at {delivery_time}")
+                print(f"✅ Order {formatted_order_id} marked as delivered at {delivery_time}")
 
-                # ✅ CRITICAL FIX: Check if popup exists and recreate if needed
-                if self.finalize_popup is None or not self.finalize_popup.isVisible():
-                    print("✓ Creating new FinalizeOrderPopup instance")
-                    self.finalize_popup = FinalizeOrderPopup(parent=self.staff_home, model=self.model)
-                    self.finalize_popup.set_staff_id(self.current_staff_id)
-                    self.finalize_popup.transaction_completed.connect(self.on_transaction_completed)
-                    print("✓ FinalizeOrderPopup recreated and connected")
+                # ✅ ALWAYS create a fresh FinalizeOrderPopup instance
+                self.finalize_popup = FinalizeOrderPopup(parent=self.staff_home, model=self.model)
+                self.finalize_popup.set_staff_id(self.current_staff_id)
+                self.finalize_popup.transaction_completed.connect(self.on_transaction_completed)
+                print("✅ FinalizeOrderPopup created fresh")
 
                 # Show finalize payment popup
                 self.finalize_popup.setOrderData(order_id)
@@ -463,7 +460,7 @@ class SDeliveryControl:
 
             except Exception as e:
                 self.model.conn.rollback()
-                print(f"✗ Database error: {e}")
+                print(f"❌ Database error: {e}")
                 QMessageBox.warning(
                     self.staff_home,
                     "Error",
@@ -471,7 +468,7 @@ class SDeliveryControl:
                 )
 
         except Exception as e:
-            print(f"✗ Error marking as delivered: {e}")
+            print(f"❌ Error marking as delivered: {e}")
             import traceback
             traceback.print_exc()
             QMessageBox.critical(
@@ -520,15 +517,18 @@ class SDeliveryControl:
             "Please select an order to view."
         )
 
+    # ============================================================================
+    # EXACT FIX FOR StaffDeliveryControl.py - Line 485
+    # ============================================================================
+
     def show_order_details(self, order_id):
         """Show order details popup"""
         try:
             formatted_order_id = self.format_order_id(order_id)
             print(f"✓ SDeliveryControl: Loading order details for Order {formatted_order_id}")
 
-            # Create popup with model if it doesn't exist
-            if self.order_popup is None:
-                self.order_popup = OrderDetailsPopup(parent=self.staff_home, model=self.model)
+            # ✅ FIXED: ALWAYS create fresh popup - REMOVED "if None" check
+            self.order_popup = OrderDetailsPopup(parent=self.staff_home, model=self.model)
 
             # Load data directly from database using the order ID
             success = self.order_popup.loadOrderFromDatabase(order_id)
