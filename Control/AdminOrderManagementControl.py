@@ -395,7 +395,7 @@ class AOrderControl:
 
     def go_to_users(self):
         print("Admin: Navigating to Users")
-        self.ashow()
+        self.manager.show()
 
     def go_to_orders(self):
         print("Admin: Navigating to Orders")
